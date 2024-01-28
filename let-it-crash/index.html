@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Caught test cases</h1>
+
+    <script>
+      window.addEventListener("unhandledrejection", (event) => {
+        console.log("Caught global error without await", event);
+      });
+
+      async function someOne() {
+        throw new Error("Custom error with await");
+      }
+
+      async function anotherAwaitFunction() {
+        try {
+          await someOne();
+        } catch (e) {
+          console.log("error inside catch with await", e);
+        }
+      }
+
+      async function anotherFunction() {
+        try {
+          someOne();
+        } catch (e) {
+          console.log("error inside catch without await", e);
+        }
+      }
+
+      anotherFunction();
+      anotherAwaitFunction();
+    </script>
+  </body>
+</html>
+el
