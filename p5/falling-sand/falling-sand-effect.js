@@ -22,7 +22,7 @@ function withinCols(i) {
 }
 
 function withinRows(j) {
-  j >= 0 && j <= rows - 1;
+ return j >= 0 && j <= rows - 1;
 }
 
 function setup() {
@@ -34,24 +34,26 @@ function setup() {
 }
 
 function mouseDragged() {
-  let mouseCol = floor(mouseX / w);
-  let mouseRow = floor(mouseY / w);
+  const mouseCol = floor(mouseX / w);
+  const mouseRow = floor(mouseY / w);
 
-  let matrix = 2;
-  let extent = floor(matrix / 2);
+  const matrix = 2;
+  const extent = floor(matrix / 2);
+
+  const updateCell = (col, row) => {
+    if (random(1) < 0.75 && withinCols(col) && withinRows(row)) {
+      grid[col][row] = hueValue;
+    }
+  };
 
   for (let i = -extent; i <= extent; i++) {
     for (let j = -extent; j <= extent; j++) {
-      if (random(1) < 0.75) {
-        let col = mouseCol + i;
-        let row = mouseRow + j;
-
-        if (withinCols(col) && withinRows(row)) {
-          grid[col][row] = hueValue;
-        }
-      }
+      const col = mouseCol + i;
+      const row = mouseRow + j;
+      updateCell(col, row);
     }
   }
+
   hueValue += 0.8;
 
   if (hueValue >= 360) {
@@ -61,7 +63,11 @@ function mouseDragged() {
 
 function draw() {
   background(0);
+  drawGrid();
+  updateGrid();
+}
 
+function drawGrid() {
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       noStroke();
@@ -73,7 +79,9 @@ function draw() {
       }
     }
   }
+}
 
+function updateGrid() {
   let nextGrid = make2DArray(cols, rows);
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
